@@ -1,7 +1,7 @@
 # ClimaFlow
 
 ## Autor
-Ágatha Castro — Matrícula: preencher
+Ágatha Castro — Matrícula: 22601851
 
 ## Descrição
 O ClimaFlow é uma aplicação web para consultar o clima atual de uma cidade. O usuário informa o nome da cidade e recebe os dados de forma simples e organizada.
