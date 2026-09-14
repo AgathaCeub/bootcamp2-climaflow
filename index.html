@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ClimaFlow</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="app">
+    <section class="hero">
+      <p class="eyebrow">BOOTCAMP II · ETAPA 01</p>
+      <h1>ClimaFlow</h1>
+      <p>Consulte o clima atual de qualquer cidade de forma rápida e organizada.</p>
+    </section>
+
+    <section class="search-card">
+      <label for="campo-busca">Cidade</label>
+      <div class="search-row">
+        <input id="campo-busca" type="text" placeholder="Ex.: Brasília" autocomplete="off">
+        <button id="botao-buscar" type="button">Buscar</button>
+      </div>
+    </section>
+
+    <section id="resultado" class="resultado" aria-live="polite">
+      <div class="estado-inicial">
+        <span class="icone">☁️</span>
+        <p>Digite uma cidade para consultar o clima.</p>
+      </div>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
