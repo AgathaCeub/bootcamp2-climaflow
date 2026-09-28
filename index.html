@@ -9,10 +9,10 @@
 <body>
   <main class="app">
     <section class="hero">
-      <p class="eyebrow">BOOTCAMP II · ETAPA 01</p>
+      <p class="eyebrow">BOOTCAMP II · ETAPA 02</p>
       <h1>ClimaFlow</h1>
-      <p>Consulte o clima atual de qualquer cidade de forma rápida e organizada.</p>
-      <p class="subtle">Dados fornecidos pela Open-Meteo.</p>
+      <p>Consulte o clima atual de qualquer cidade e salve suas cidades favoritas.</p>
+      <p class="subtle">Clima pela Open-Meteo e favoritos salvos no Supabase.</p>
     </section>
 
     <section class="search-card">
@@ -29,8 +29,22 @@
         <p>Digite uma cidade para consultar o clima.</p>
       </div>
     </section>
+
+    <section class="favoritos-card">
+      <div class="favoritos-cabecalho">
+        <div>
+          <p class="eyebrow">PERSISTÊNCIA DE DADOS</p>
+          <h2>Minhas cidades favoritas</h2>
+        </div>
+        <button id="botao-atualizar-favoritos" class="botao-secundario" type="button">Atualizar</button>
+      </div>
+      <p id="status-favoritos" class="status-favoritos" aria-live="polite"></p>
+      <div id="lista-favoritos" class="lista-favoritos"></div>
+    </section>
   </main>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
