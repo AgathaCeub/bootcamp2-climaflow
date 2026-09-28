@@ -1,89 +1,20 @@
 const botaoBuscar = document.getElementById("botao-buscar");
 const campoBusca = document.getElementById("campo-busca");
 const areaResultado = document.getElementById("resultado");
-
-function traduzirTempo(codigo) {
-  if (codigo === 0) return "Céu limpo";
-  if (codigo === 1 || codigo === 2) return "Parcialmente nublado";
-  if (codigo === 3) return "Nublado";
-  if (codigo === 45 || codigo === 48) return "Neblina";
-  if (codigo >= 51 && codigo <= 57) return "Garoa";
-  if (codigo >= 61 && codigo <= 67) return "Chuva";
-  if (codigo >= 71 && codigo <= 77) return "Neve";
-  if (codigo >= 80 && codigo <= 82) return "Pancadas de chuva";
-  if (codigo >= 95) return "Trovoadas";
-  return "Condição variável";
-}
-
-async function buscarClima(cidade) {
-  areaResultado.innerHTML = '<div class="carregando">Buscando dados...</div>';
-
-  try {
-    const urlCidade = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(cidade)}&count=1&language=pt&format=json`;
-    const respostaCidade = await fetch(urlCidade);
-
-    if (!respostaCidade.ok) throw new Error("Não foi possível consultar a cidade.");
-
-    const dadosCidade = await respostaCidade.json();
-
-    if (!dadosCidade.results || dadosCidade.results.length === 0) {
-      throw new Error("Cidade não encontrada. Confira o nome e tente novamente.");
-    }
-
-    const local = dadosCidade.results[0];
-    const urlClima =
-      `https://api.open-meteo.com/v1/forecast?latitude=${local.latitude}` +
-      `&longitude=${local.longitude}` +
-      `&current=temperature_2m,apparent_temperature,relative_humidity_2m,wind_speed_10m,weather_code` +
-      `&timezone=auto`;
-
-    const respostaClima = await fetch(urlClima);
-    if (!respostaClima.ok) throw new Error("Não foi possível carregar os dados do clima.");
-
-    const dadosClima = await respostaClima.json();
-    exibirClima(local, dadosClima.current, dadosClima.timezone);
-  } catch (erro) {
-    areaResultado.innerHTML = `
-      <div class="erro">
-        <strong>Ops!</strong>
-        <p>${erro.message}</p>
-      </div>`;
-  }
-}
-
-function exibirClima(local, atual, timezone) {
-  const descricao = traduzirTempo(atual.weather_code);
-
-  areaResultado.innerHTML = `
-    <h2>${local.name}</h2>
-    <p>${local.admin1 ? local.admin1 + ", " : ""}${local.country}</p>
-    <p class="condicao">${descricao}</p>
-
-    <div class="grade-clima">
-      <div class="item-clima"><span>Temperatura</span><strong>${atual.temperature_2m} °C</strong></div>
-      <div class="item-clima"><span>Sensação</span><strong>${atual.apparent_temperature} °C</strong></div>
-      <div class="item-clima"><span>Umidade</span><strong>${atual.relative_humidity_2m}%</strong></div>
-      <div class="item-clima"><span>Vento</span><strong>${atual.wind_speed_10m} km/h</strong></div>
-    </div>
-
-    <p class="detalhe">Fuso horário: ${timezone}</p>`;
-}
-
-botaoBuscar.addEventListener("click", () => {
-  const cidade = campoBusca.value.trim();
-
-  if (!cidade) {
-    areaResultado.innerHTML = `
-      <div class="erro">
-        <strong>Informe uma cidade.</strong>
-        <p>Exemplo: Brasília, Recife ou Lisboa.</p>
-      </div>`;
-    return;
-  }
-
-  buscarClima(cidade);
-});
-
-campoBusca.addEventListener("keydown", (evento) => {
-  if (evento.key === "Enter") botaoBuscar.click();
-});
+const listaFavoritos = document.getElementById("lista-favoritos");
+const statusFavoritos = document.getElementById("status-favoritos");
+const botaoAtualizarFavoritos = document.getElementById("botao-atualizar-favoritos");
+let cidadeAtual = null;
+let supabaseClient = null;
+function supabaseConfigurado(){return typeof SUPABASE_URL==="string"&&typeof SUPABASE_PUBLIC_KEY==="string"&&!SUPABASE_URL.includes("COLE_AQUI")&&!SUPABASE_PUBLIC_KEY.includes("COLE_AQUI")}
+if(supabaseConfigurado()&&window.supabase){supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLIC_KEY)}
+function traduzirTempo(codigo){if(codigo===0)return"Céu limpo";if(codigo===1||codigo===2)return"Parcialmente nublado";if(codigo===3)return"Nublado";if(codigo===45||codigo===48)return"Neblina";if(codigo>=51&&codigo<=57)return"Garoa";if(codigo>=61&&codigo<=67)return"Chuva";if(codigo>=71&&codigo<=77)return"Neve";if(codigo>=80&&codigo<=82)return"Pancadas de chuva";if(codigo>=95)return"Trovoadas";return"Condição variável"}
+async function buscarClima(cidade){areaResultado.innerHTML='<div class="carregando">Buscando dados...</div>';try{const urlCidade=`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(cidade)}&count=1&language=pt&format=json`;const respostaCidade=await fetch(urlCidade);if(!respostaCidade.ok)throw new Error("Não foi possível consultar a cidade.");const dadosCidade=await respostaCidade.json();if(!dadosCidade.results||dadosCidade.results.length===0)throw new Error("Cidade não encontrada. Confira o nome e tente novamente.");const local=dadosCidade.results[0];const urlClima=`https://api.open-meteo.com/v1/forecast?latitude=${local.latitude}&longitude=${local.longitude}&current=temperature_2m,apparent_temperature,relative_humidity_2m,wind_speed_10m,weather_code&timezone=auto`;const respostaClima=await fetch(urlClima);if(!respostaClima.ok)throw new Error("Não foi possível carregar os dados do clima.");const dadosClima=await respostaClima.json();cidadeAtual={nome:local.name,estado:local.admin1||"",pais:local.country||"",latitude:local.latitude,longitude:local.longitude};exibirClima(local,dadosClima.current,dadosClima.timezone)}catch(erro){cidadeAtual=null;areaResultado.innerHTML=`<div class="erro"><strong>Ops!</strong><p>${erro.message}</p></div>`}}
+function exibirClima(local,atual,timezone){const descricao=traduzirTempo(atual.weather_code);areaResultado.innerHTML=`<h2>${local.name}</h2><p>${local.admin1?local.admin1+", ":""}${local.country}</p><p class="condicao">${descricao}</p><div class="grade-clima"><div class="item-clima"><span>Temperatura</span><strong>${atual.temperature_2m} °C</strong></div><div class="item-clima"><span>Sensação</span><strong>${atual.apparent_temperature} °C</strong></div><div class="item-clima"><span>Umidade</span><strong>${atual.relative_humidity_2m}%</strong></div><div class="item-clima"><span>Vento</span><strong>${atual.wind_speed_10m} km/h</strong></div></div><p class="detalhe">Fuso horário: ${timezone}</p><div class="acoes-resultado"><button id="botao-favoritar" class="botao-favoritar" type="button">☆ Favoritar cidade</button></div>`;document.getElementById("botao-favoritar").addEventListener("click",salvarFavorito)}
+async function salvarFavorito(){if(!cidadeAtual)return;if(!supabaseClient){statusFavoritos.textContent="Configure o Supabase no arquivo config.js para usar os favoritos.";return}statusFavoritos.textContent="Salvando favorito...";const{error}=await supabaseClient.from("favoritos").insert({nome_item:cidadeAtual.nome,dados_extra:{estado:cidadeAtual.estado,pais:cidadeAtual.pais,latitude:cidadeAtual.latitude,longitude:cidadeAtual.longitude}});if(error){statusFavoritos.textContent=error.code==="23505"?"Essa cidade já está nos favoritos.":"Não foi possível salvar a cidade.";console.error(error);return}statusFavoritos.textContent="Cidade salva nos favoritos.";await listarFavoritos()}
+async function listarFavoritos(){listaFavoritos.innerHTML="";if(!supabaseClient){statusFavoritos.textContent="Os favoritos serão exibidos aqui depois da configuração do Supabase.";listaFavoritos.innerHTML='<div class="vazio">Banco ainda não conectado.</div>';return}statusFavoritos.textContent="Carregando favoritos...";const{data,error}=await supabaseClient.from("favoritos").select("id, nome_item, dados_extra, created_at").order("created_at",{ascending:false});if(error){statusFavoritos.textContent="Erro ao carregar os favoritos.";console.error(error);return}if(!data||data.length===0){statusFavoritos.textContent="";listaFavoritos.innerHTML='<div class="vazio">Nenhuma cidade favorita ainda.</div>';return}statusFavoritos.textContent=`${data.length} cidade(s) salva(s).`;data.forEach((favorito)=>{const item=document.createElement("div");item.className="favorito-item";const local=[favorito.dados_extra?.estado,favorito.dados_extra?.pais].filter(Boolean).join(", ");item.innerHTML=`<div class="favorito-info"><strong>${favorito.nome_item}</strong><span>${local||"Local salvo"}</span></div><button class="botao-excluir" type="button" data-id="${favorito.id}">Excluir</button>`;item.querySelector(".botao-excluir").addEventListener("click",()=>removerFavorito(favorito.id));listaFavoritos.appendChild(item)})}
+async function removerFavorito(id){if(!supabaseClient)return;statusFavoritos.textContent="Removendo favorito...";const{error}=await supabaseClient.from("favoritos").delete().eq("id",id);if(error){statusFavoritos.textContent="Não foi possível excluir o favorito.";console.error(error);return}statusFavoritos.textContent="Favorito removido.";await listarFavoritos()}
+botaoBuscar.addEventListener("click",()=>{const cidade=campoBusca.value.trim();if(!cidade){areaResultado.innerHTML='<div class="erro"><strong>Informe uma cidade.</strong><p>Exemplo: Brasília, Recife ou Lisboa.</p></div>';return}buscarClima(cidade)});
+campoBusca.addEventListener("keydown",(evento)=>{if(evento.key==="Enter")botaoBuscar.click()});
+botaoAtualizarFavoritos.addEventListener("click",listarFavoritos);
+listarFavoritos();
