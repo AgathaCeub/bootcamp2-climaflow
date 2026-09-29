@@ -4,7 +4,7 @@
 Ágatha Castro — Matrícula: 22601851
 
 ## Descrição
-O ClimaFlow é uma aplicação web para consultar o clima atual de uma cidade. Na Etapa 02, o projeto passou a permitir salvar e excluir cidades favoritas usando persistência de dados no Supabase.
+O ClimaFlow é uma aplicação web para consultar o clima atual de uma cidade. Na Etapa 02, o projeto passou a permitir salvar e excluir cidades favoritas usando persistência de dados no Supabase e também passou a ser executado em containers Docker.
 
 ## API utilizada
 - **Open-Meteo**
@@ -13,7 +13,7 @@ O ClimaFlow é uma aplicação web para consultar o clima atual de uma cidade. N
 - Previsão atual: `https://api.open-meteo.com/v1/forecast`
 
 ## Persistência de dados
-Foi utilizado o **Supabase**, com banco PostgreSQL.
+Foi utilizado o **Supabase**, com banco de dados PostgreSQL.
 
 Tabela: `favoritos`
 
@@ -23,7 +23,7 @@ Campos:
 - `nome_item`: nome da cidade
 - `dados_extra`: estado, país, latitude e longitude em JSON
 
-A aplicação permite criar, listar e excluir favoritos. Nesta etapa, as políticas RLS foram configuradas para permitir leitura, inclusão e exclusão pelo papel `anon`, conforme a proposta acadêmica do exercício.
+A aplicação permite criar, listar e excluir cidades favoritas. Nesta etapa, as políticas RLS foram configuradas para permitir leitura, inclusão e exclusão pelo papel `anon`, de acordo com a proposta acadêmica do exercício.
 
 ## Funcionalidades
 - Buscar uma cidade pelo nome.
@@ -33,49 +33,52 @@ A aplicação permite criar, listar e excluir favoritos. Nesta etapa, as políti
 - Listar cidades favoritas ao abrir a aplicação.
 - Excluir cidades favoritas.
 
-## Como executar localmente
-1. Clone: `git clone https://github.com/AgathaCeub/bootcamp2-climaflow.git`
-2. Configure `config.js` com a Project URL e a Publishable key (ou anon key, em projeto legado) do Supabase.
-3. Abra `index.html` no navegador.
-
 ## Docker
 
-### Construir a imagem
+### Executar a imagem publicada no Docker Hub
 ```bash
-docker build -t bootcamp2-climaflow .
+docker run -d -p 8080:80 --name climaflow agathacastro/bootcamp2-climaflow:latest
 ```
 
-### Executar localmente
+Depois, acesse:
+
+`http://localhost:8080`
+
+### Construir a imagem localmente
 ```bash
-docker run -d -p 8080:80 --name climaflow bootcamp2-climaflow
+docker build -t bootcamp2-app .
 ```
 
-### Executar dois containers
-```bash
-docker run -d -p 8080:80 --name climaflow-1 bootcamp2-climaflow
-docker run -d -p 8081:80 --name climaflow-2 bootcamp2-climaflow
-docker ps
-```
+### Tags publicadas
+- `1.0`
+- `1.1`
+- `latest`
 
 ## Sidequests
 
-### SQ1 - .dockerignore
-Foi criado um `.dockerignore` para não enviar ao build arquivos desnecessários, deixando a imagem mais limpa e o processo mais rápido.
+### SQ1 — .dockerignore
+Foi criado um arquivo `.dockerignore` para evitar o envio de arquivos desnecessários ao contexto de build, como `.git`, `README.md`, `supabase.sql`, arquivos `.zip` e `.DS_Store`. Isso deixa o processo de build mais organizado e evita incluir arquivos que não são necessários para executar a aplicação.
 
-### SQ2 - Versionamento da imagem
-Tags no Docker Hub: `1.0`, `1.1` e `latest`.
+### SQ2 — Versionamento da imagem
+A imagem foi publicada no Docker Hub com as tags `1.0`, `1.1` e `latest`.
 
-### SQ3 - Docker Hub
-O repositório no Docker Hub terá a descrição do projeto, comando `docker run` e link do GitHub.
+### SQ3 — Docker Hub
+O repositório público no Docker Hub contém a imagem da aplicação e permite executá-la diretamente com o comando:
 
-### SQ4 - Explorando a orquestração
-Foram executados dois containers simultaneamente nas portas 8080 e 8081.
+```bash
+docker run -d -p 8080:80 --name climaflow agathacastro/bootcamp2-climaflow:latest
+```
 
-**Evidência:** adicionar o print do `docker ps` depois do teste.
+### SQ4 — Dois containers e orquestração
+Foram executados dois containers simultaneamente, um na porta `8080` e outro na porta `8081`.
 
-Se eu tivesse 100 containers, não seria viável administrar cada um manualmente. O Kubernetes poderia organizar esses containers em um cluster, usando pods para executar as instâncias e réplicas para manter a quantidade necessária da aplicação rodando. Isso facilita escalar, substituir containers com falha e distribuir a aplicação entre diferentes máquinas.
+**Evidência:**
+
+![Dois containers executando simultaneamente](evidencias/docker-ps.png)
+
+Se eu tivesse 100 containers, não seria viável administrar cada um manualmente. Eu utilizaria uma ferramenta de orquestração como o Kubernetes. Os containers poderiam ser organizados em um cluster, com pods para executar as instâncias da aplicação e réplicas para manter a quantidade necessária de cópias em funcionamento. Dessa forma, seria possível escalar a aplicação, substituir instâncias que apresentassem falha e distribuir a execução entre diferentes máquinas de forma automatizada.
 
 ## Links
-- **Aplicação no ar (GitHub Pages):** https://agathaceub.github.io/bootcamp2-climaflow/
 - **Repositório GitHub:** https://github.com/AgathaCeub/bootcamp2-climaflow
-- **Docker Hub:** ADICIONAR_LINK_DEPOIS
+- **Aplicação no GitHub Pages:** https://agathaceub.github.io/bootcamp2-climaflow/
+- **Docker Hub:** https://hub.docker.com/r/agathacastro/bootcamp2-climaflow
