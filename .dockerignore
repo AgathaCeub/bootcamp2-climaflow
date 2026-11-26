@@ -1,6 +1,15 @@
 .git
-.gitignore
+.github
+.env
+.DS_Store
+node_modules
+data
+tests
+test-results
+evidencias
+docs
+scripts
 README.md
 supabase.sql
+*.log
 *.zip
-.DS_Store

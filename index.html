@@ -3,48 +3,61 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ClimaFlow</title>
+  <meta name="theme-color" content="#5755cc">
+  <meta name="description" content="Consulte o clima, acompanhe a previsão e salve suas cidades favoritas no ClimaFlow.">
+  <title>ClimaFlow · Clima e cidades favoritas</title>
   <link rel="stylesheet" href="style.css">
+  <script src="script.js" type="module"></script>
 </head>
 <body>
-  <main class="app">
-    <section class="hero">
-      <p class="eyebrow">BOOTCAMP II · ETAPA 02</p>
-      <h1>ClimaFlow</h1>
-      <p>Consulte o clima atual de qualquer cidade e salve suas cidades favoritas.</p>
-      <p class="subtle">Clima pela Open-Meteo e favoritos salvos no Supabase.</p>
-    </section>
-
-    <section class="search-card">
-      <label for="campo-busca">Cidade</label>
-      <div class="search-row">
-        <input id="campo-busca" type="text" placeholder="Ex.: Brasília" autocomplete="off">
-        <button id="botao-buscar" type="button">Buscar</button>
+  <a class="pular" href="#campo-busca">Ir para a busca</a>
+  <div class="app">
+    <header class="topo">
+      <a class="marca" href="./" aria-label="ClimaFlow, início"><span class="marca-icone" aria-hidden="true">☀</span>ClimaFlow<span class="ponto">.</span></a>
+      <div class="unidades" role="group" aria-label="Unidade de temperatura">
+        <button type="button" data-unidade="C" aria-pressed="true">°C</button>
+        <button type="button" data-unidade="F" aria-pressed="false">°F</button>
       </div>
-    </section>
-
-    <section id="resultado" class="resultado" aria-live="polite">
-      <div class="estado-inicial">
-        <span class="icone">☁️</span>
-        <p>Digite uma cidade para consultar o clima.</p>
-      </div>
-    </section>
-
-    <section class="favoritos-card">
-      <div class="favoritos-cabecalho">
-        <div>
-          <p class="eyebrow">PERSISTÊNCIA DE DADOS</p>
-          <h2>Minhas cidades favoritas</h2>
+    </header>
+    <main>
+      <section class="hero" aria-labelledby="titulo">
+        <p class="eyebrow">UM OLHAR PARA O TEMPO</p>
+        <h1 id="titulo">O clima nas cidades<br>que importam.</h1>
+        <p>Confira a previsão e mantenha seus destinos favoritos por perto.</p>
+      </section>
+      <section class="search-card" aria-label="Buscar cidade">
+        <form id="form-busca" novalidate>
+          <label for="campo-busca">Para onde vamos olhar hoje?</label>
+          <div class="search-row">
+            <input id="campo-busca" name="cidade" type="search" placeholder="Busque uma cidade, como Brasília" maxlength="100" autocomplete="off" aria-describedby="status-busca" required>
+            <button id="botao-buscar" type="submit">Buscar cidade <span aria-hidden="true">↗</span></button>
+          </div>
+        </form>
+        <div class="sugestoes" aria-label="Buscas rápidas"><span>Explore</span><button type="button" data-cidade="Brasília">Brasília</button><button type="button" data-cidade="São Paulo">São Paulo</button><button type="button" data-cidade="Lisboa">Lisboa</button></div>
+        <p id="status-busca" class="status" role="status"></p>
+        <div id="cidades-encontradas" class="cidades-encontradas"></div>
+      </section>
+      <div class="conteudo">
+        <div class="coluna-clima">
+          <section id="resultado" class="resultado" aria-label="Clima atual" aria-live="polite">
+            <div class="estado-inicial"><span class="ilustracao" aria-hidden="true">☀</span><h2>Uma cidade, muitas possibilidades.</h2><p>Busque um destino para descobrir como está o tempo por lá.</p><span class="etiqueta">Clima atual + previsão de 5 dias</span></div>
+          </section>
+          <section id="previsao" class="previsao-card" aria-labelledby="titulo-previsao" hidden>
+            <div class="secao-cabecalho"><h2 id="titulo-previsao">Próximos 5 dias</h2><span>Planeje seus dias</span></div>
+            <div id="lista-previsao" class="lista-previsao"></div>
+          </section>
         </div>
-        <button id="botao-atualizar-favoritos" class="botao-secundario" type="button">Atualizar</button>
+        <aside class="favoritos-card" aria-labelledby="titulo-favoritos">
+          <div class="secao-cabecalho"><div><p class="eyebrow">SEMPRE POR PERTO</p><h2 id="titulo-favoritos">Cidades favoritas</h2></div><button id="botao-atualizar-favoritos" class="botao-icone" type="button" aria-label="Atualizar cidades favoritas">↻</button></div>
+          <p class="texto-apoio">Salve seus destinos para consultar o clima de novo com um toque.</p>
+          <p id="status-favoritos" class="status" role="status"></p>
+          <div id="lista-favoritos" class="lista-favoritos"></div>
+          <p class="nota-lista">Os favoritos ficam salvos nesta instalação mesmo depois de fechar a página.</p>
+        </aside>
       </div>
-      <p id="status-favoritos" class="status-favoritos" aria-live="polite"></p>
-      <div id="lista-favoritos" class="lista-favoritos"></div>
-    </section>
-  </main>
-
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="config.js"></script>
-  <script src="script.js"></script>
+    </main>
+    <footer><span>ClimaFlow · Bootcamp II</span><span>Dados meteorológicos: <a href="https://open-meteo.com/" target="_blank" rel="noopener noreferrer">Open-Meteo</a> · Localizações: GeoNames</span></footer>
+    <noscript>Ative o JavaScript para consultar o clima e usar os favoritos.</noscript>
+  </div>
 </body>
 </html>
