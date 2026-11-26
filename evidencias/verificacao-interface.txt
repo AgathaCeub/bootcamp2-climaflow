@@ -1,0 +1,13 @@
+ClimaFlow 3.1.0 — verificação em 12/11/2026
+
+- Fluxo da interface validado no DOM: busca de Brasília, previsão de cinco dias,
+  conversão para Fahrenheit, salvar, recarregar e excluir.
+- A API local de favoritos foi executada com SQLite real durante o teste.
+- A previsão foi simulada no teste de interface para tornar a execução repetível.
+- Separadamente, a API pública Open-Meteo retornou dados atuais e cinco dias
+  de previsão para Brasília.
+- Os testes automatizados também confirmaram que um favorito persistiu em
+  arquivo SQLite depois que o servidor fechou e foi reaberto.
+
+Este registro é local. A captura da PR com CI bloqueando o merge deve ser feita
+no GitHub após ativar o check obrigatório.

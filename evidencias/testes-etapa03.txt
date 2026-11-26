@@ -1,0 +1,43 @@
+✔ envia cidade com acentos corretamente na consulta de geocoding (3.074412ms)
+✔ trata cidade inexistente como lista vazia (0.819129ms)
+✔ descarta resultados com coordenadas inválidas (0.358352ms)
+✔ consulta previsão de cinco dias e fuso local na Open-Meteo (0.627339ms)
+✔ rejeita uma resposta climática sem dados atuais (0.784887ms)
+✔ traduz falha de rede para mensagem útil (0.238661ms)
+✔ traduz cancelamento por demora e encerra o temporizador (0.192201ms)
+✔ usa o endpoint de favoritos da própria aplicação (0.362819ms)
+✔ envia os dados da cidade para o servidor validar e salvar (0.571164ms)
+✔ informa duplicidade retornada pela API de favoritos (0.662873ms)
+✔ exclui somente o identificador solicitado e aceita resposta sem corpo (0.936327ms)
+✔ recusa um identificador inválido sem enviar a solicitação (0.17228ms)
+✔ rejeita uma resposta de lista inválida (0.360986ms)
+✔ trata respostas de erro não JSON sem exibir o texto do servidor externo (0.300905ms)
+✔ rejeita busca vazia, curta, extensa e tipos inesperados (1.151612ms)
+✔ preserva acentos e normaliza espaços da busca (0.147654ms)
+✔ aceita coordenadas zero e os limites geográficos (0.100001ms)
+✔ rejeita coordenadas inválidas sem converter null para zero (0.18493ms)
+✔ prepara a cidade com os campos exigidos pelo banco (0.723806ms)
+✔ não tenta salvar um favorito sem localização válida (0.163037ms)
+✔ distingue cidades homônimas no identificador único do banco (0.162485ms)
+✔ continua lendo os favoritos da Etapa 02 sem migração (0.157448ms)
+✔ detecta cidade já salva por coordenadas, inclusive no formato anterior (0.293234ms)
+✔ traduz códigos de neve e de trovoada sem confundir as condições (0.35688ms)
+✔ converte Celsius para Fahrenheit, incluindo zero e valores negativos (15.218648ms)
+✔ não transforma ausência de leitura meteorológica em zero (0.130337ms)
+✔ formata previsão sem deslocar o dia pelo fuso horário do computador (3.153632ms)
+✔ serve a interface e os módulos com o tipo de conteúdo correto (29.225871ms)
+✔ responde ao healthcheck usado pelo Docker (1.859394ms)
+✔ recusa arquivos internos e o arquivo do banco (5.502846ms)
+✔ recusa escrita no servidor de arquivos (2.977865ms)
+✔ requisição HEAD não retorna o corpo da página (5.965827ms)
+✔ recusa cidade inválida, JSON malformado e corpo grande sem criar registros (8.211425ms)
+✔ impede coordenadas duplicadas e mantém outras cidades ao excluir pelo ID (9.9667ms)
+✔ mantém os favoritos no SQLite real depois de fechar e reabrir o servidor (9.906921ms)
+ℹ tests 35
+ℹ suites 0
+ℹ pass 35
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 180.386561
