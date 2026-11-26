@@ -1,84 +1,101 @@
-# ClimaFlow
+# ClimaFlow | Bootcamp II, Etapa 03
 
-## Autor
-Ágatha Castro — Matrícula: 22601851
+Aplicação web para consultar o tempo atual, acompanhar a previsão de cinco dias e salvar cidades favoritas. Esta versão dá continuidade ao ClimaFlow das etapas anteriores.
 
-## Descrição
-O ClimaFlow é uma aplicação web para consultar o clima atual de uma cidade. Na Etapa 02, o projeto passou a permitir salvar e excluir cidades favoritas usando persistência de dados no Supabase e também passou a ser executado em containers Docker.
+**Repositório:** [AgathaCeub/bootcamp2-climaflow](https://github.com/AgathaCeub/bootcamp2-climaflow)
 
-## API utilizada
-- **Open-Meteo**
-- Documentação: https://open-meteo.com/en/docs
-- Geocoding: `https://geocoding-api.open-meteo.com/v1/search`
-- Previsão atual: `https://api.open-meteo.com/v1/forecast`
+**Versão:** 3.1.0 · **Branch:** `feature/etapa03-entrega-final`
 
-## Persistência de dados
-Foi utilizado o **Supabase**, com banco de dados PostgreSQL.
+**Atividade:** Desafio — Entrega Final · Bootcamp II
 
-Tabela: `favoritos`
+**Prazo informado no enunciado:** 25/10/2026, às 23h59. Essa data identifica o prazo da atividade; o histórico do GitHub registra as datas reais das alterações.
 
-Campos:
-- `id`: identificador do registro
-- `created_at`: data e hora em que a cidade foi salva
-- `nome_item`: nome da cidade
-- `dados_extra`: estado, país, latitude e longitude em JSON
+**Situação:** código preparado para revisão. As evidências de colaboração, proteção da main e publicação da imagem 3.1.0 ainda precisam ser concluídas.
 
-A aplicação permite criar, listar e excluir cidades favoritas. Nesta etapa, as políticas RLS foram configuradas para permitir leitura, inclusão e exclusão pelo papel `anon`, de acordo com a proposta acadêmica do exercício.
+## Integrantes
 
-## Funcionalidades
-- Buscar uma cidade pelo nome.
-- Consultar os dados atuais usando `fetch`.
-- Exibir temperatura, sensação térmica, umidade e velocidade do vento.
-- Salvar cidades favoritas no Supabase.
-- Listar cidades favoritas ao abrir a aplicação.
-- Excluir cidades favoritas.
+| Nome | Matrícula | GitHub | Responsabilidade | PR principal |
+| --- | --- | --- | --- | --- |
+| Ágatha Castro da Costa | 22601851 | [AgathaCeub](https://github.com/AgathaCeub) | Interface, integração com Open-Meteo, favoritos em SQLite, testes, CI e Docker preparados nesta versão | PR desta versão |
+| Anna Rocha | A confirmar | A confirmar | Participação no grupo informada por Ágatha; divisão de código e PR a confirmar com Anna | A confirmar |
 
-## Docker
+## O que a aplicação faz
 
-### Executar a imagem publicada no Docker Hub
-```bash
-docker run -d -p 8080:80 --name climaflow agathacastro/bootcamp2-climaflow:latest
-```
+- Busca cidades por nome e permite selecionar a localização quando há vários resultados.
+- Exibe temperatura, sensação térmica, umidade, vento e previsão de cinco dias.
+- Alterna entre °C e °F.
+- Cria, lista e exclui favoritos. Um favorito permite consultar novamente a cidade sem refazer a busca.
 
-Depois, acesse:
+## API externa e banco de dados
 
-`http://localhost:8080`
+A [Open-Meteo](https://open-meteo.com/en/docs) fornece os dados de clima e previsão. O [Geocoding da Open-Meteo](https://open-meteo.com/en/docs/geocoding-api) localiza cidades e devolve suas coordenadas. A previsão é solicitada para a cidade selecionada e usa o fuso local dela. O uso não requer uma chave para esta execução acadêmica.
 
-### Construir a imagem localmente
-```bash
-docker build -t bootcamp2-app .
-```
+Os favoritos ficam em um banco **SQLite** real, no arquivo `data/climaflow.sqlite`. O servidor em Node.js cria o arquivo e a tabela `favoritos` ao iniciar. São armazenados nome, estado, país, latitude, longitude e data de inclusão. As coordenadas impedem duplicatas; a exclusão é feita pelo identificador de cada registro.
 
-### Tags publicadas
-- `1.0`
-- `1.1`
-- `latest`
+| Operação | Rota |
+| --- | --- |
+| Listar | `GET /api/favoritos` |
+| Criar | `POST /api/favoritos` |
+| Excluir | `DELETE /api/favoritos/:id` |
 
-## Sidequests
+A Etapa 02 usava Supabase/PostgreSQL. Nesta versão, os favoritos são armazenados no SQLite pelo backend; os dados antigos não são migrados automaticamente.
 
-### SQ1 — .dockerignore
-Foi criado um arquivo `.dockerignore` para evitar o envio de arquivos desnecessários ao contexto de build, como `.git`, `README.md`, `supabase.sql`, arquivos `.zip` e `.DS_Store`. Isso deixa o processo de build mais organizado e evita incluir arquivos que não são necessários para executar a aplicação.
+O banco desta etapa começa vazio e pertence à instalação que está rodando. O navegador guarda somente a preferência de unidade de temperatura. A execução completa usa o servidor Node.js ou Docker; uma hospedagem apenas de arquivos estáticos não executa o banco.
 
-### SQ2 — Versionamento da imagem
-A imagem foi publicada no Docker Hub com as tags `1.0`, `1.1` e `latest`.
+## Executar no computador
 
-### SQ3 — Docker Hub
-O repositório público no Docker Hub contém a imagem da aplicação e permite executá-la diretamente com o comando:
+Com **Node.js 24 ou superior**, abra a pasta `ClimaFlow-Etapa03` no terminal e execute:
 
-```bash
-docker run -d -p 8080:80 --name climaflow agathacastro/bootcamp2-climaflow:latest
-```
+~~~bash
+npm ci
+npm start
+~~~
 
-### SQ4 — Dois containers e orquestração
-Foram executados dois containers simultaneamente, um na porta `8080` e outro na porta `8081`.
+Abra [http://localhost:8080](http://localhost:8080). O banco é criado automaticamente. A consulta meteorológica precisa de internet. Para ver os dados permanecerem, salve uma cidade, encerre o servidor e execute `npm start` novamente.
 
-**Evidência:**
+## Executar com Docker
 
-![Dois containers executando simultaneamente](evidencias/docker-ps.png)
+O [repositório no Docker Hub](https://hub.docker.com/r/agathacastro/bootcamp2-climaflow) é o da etapa anterior. A tag **3.1.0** desta entrega ainda precisa ser publicada.
 
-Se eu tivesse 100 containers, não seria viável administrar cada um manualmente. Eu utilizaria uma ferramenta de orquestração como o Kubernetes. Os containers poderiam ser organizados em um cluster, com pods para executar as instâncias da aplicação e réplicas para manter a quantidade necessária de cópias em funcionamento. Dessa forma, seria possível escalar a aplicação, substituir instâncias que apresentassem falha e distribuir a execução entre diferentes máquinas de forma automatizada.
+Enquanto a tag não for publicada, construa e rode a imagem a partir da pasta do código:
 
-## Links
-- **Repositório GitHub:** https://github.com/AgathaCeub/bootcamp2-climaflow
-- **Aplicação no GitHub Pages:** https://agathaceub.github.io/bootcamp2-climaflow/
-- **Docker Hub:** https://hub.docker.com/r/agathacastro/bootcamp2-climaflow
+~~~bash
+docker build -t climaflow:3.1.0 .
+docker run --rm -p 127.0.0.1:8080:8080 -v climaflow-dados:/app/data climaflow:3.1.0
+~~~
+
+Com a tag publicada, o comando em uma máquina limpa será:
+
+~~~bash
+docker run --rm -p 127.0.0.1:8080:8080 -v climaflow-dados:/app/data agathacastro/bootcamp2-climaflow:3.1.0
+~~~
+
+Abra [http://localhost:8080](http://localhost:8080). A porta interna é `8080`. O volume `climaflow-dados` preserva os favoritos ao recriar o container. As variáveis padrão já estão no Dockerfile e nenhum segredo é necessário para executar a aplicação.
+
+## Testes e integração contínua
+
+~~~bash
+npm test
+~~~
+
+A suíte tem **35 testes**, incluindo busca, conversão de unidades, validação de coordenadas, duplicatas e o ciclo de criação, leitura e exclusão. Um teste de integração cria um arquivo SQLite, fecha o servidor, abre novamente o mesmo banco e confirma que os dados foram preservados.
+
+O workflow em `.github/workflows/ci.yml` está configurado para rodar em PRs para a `main`. O job **Testes** roda a suíte e o job **Container** constrói a imagem e verifica a persistência ao recriar o container. O procedimento de proteção da branch e a demonstração do bloqueio estão em [docs/CONTRIBUICAO.md](docs/CONTRIBUICAO.md).
+
+## Evidências
+
+| Item | Situação |
+| --- | --- |
+| Testes locais | 35 aprovados; [registro da execução](evidencias/testes-etapa03.txt) |
+| Persistência real | Criação, leitura após reabrir o banco e exclusão verificadas em SQLite |
+| Open-Meteo | Consulta real de Brasília retornou dados atuais e cinco dias de previsão |
+| Pull request, revisão e proteção da `main` | Pendentes da publicação e da revisão real |
+| Print da PR bloqueada pelo CI | Pendente da primeira execução no GitHub e da ativação do check obrigatório |
+| Imagem Docker Hub 3.1.0 | Pendente de publicação e verificação |
+| Conflito de merge | Nenhum ocorrido na preparação local desta versão |
+
+## Entrega no Moodle
+
+Cada integrante deve enviar individualmente o mesmo arquivo **README.md** atualizado. O código fica no repositório. Antes do envio, completar matrícula e GitHub da Anna, registrar a contribuição de código de cada integrante, concluir as revisões e merges, ativar os checks obrigatórios, incluir o print real de CI bloqueado e publicar/testar a imagem 3.1.0.
+
+O README e as evidências devem corresponder à versão de código aprovada no GitHub.
