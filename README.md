@@ -6,6 +6,10 @@ Aplicação web para consultar o tempo atual, acompanhar a previsão de cinco di
 
 **Versão:** 3.1.0 · **Branch:** `feature/etapa03-entrega-final`
 
+**Pull request:** [#1 — Previsão, favoritos SQLite e CI](https://github.com/AgathaCeub/bootcamp2-climaflow/pull/1)
+
+**CI verificado:** [Testes e Container aprovados](https://github.com/AgathaCeub/bootcamp2-climaflow/actions/runs/45825875186)
+
 **Atividade:** Desafio — Entrega Final · Bootcamp II
 
 **Prazo informado no enunciado:** 25/10/2026, às 23h59. Essa data identifica o prazo da atividade; o histórico do GitHub registra as datas reais das alterações.
@@ -16,7 +20,7 @@ Aplicação web para consultar o tempo atual, acompanhar a previsão de cinco di
 
 | Nome | Matrícula | GitHub | Responsabilidade | PR principal |
 | --- | --- | --- | --- | --- |
-| Ágatha Castro da Costa | 22601851 | [AgathaCeub](https://github.com/AgathaCeub) | Interface, integração com Open-Meteo, favoritos em SQLite, testes, CI e Docker preparados nesta versão | PR desta versão |
+| Ágatha Castro da Costa | 22601851 | [AgathaCeub](https://github.com/AgathaCeub) | Interface, integração com Open-Meteo, favoritos em SQLite, testes, CI e Docker preparados nesta versão | [#1](https://github.com/AgathaCeub/bootcamp2-climaflow/pull/1) |
 | Anna Rocha | A confirmar | A confirmar | Participação no grupo informada por Ágatha; divisão de código e PR a confirmar com Anna | A confirmar |
 
 ## O que a aplicação faz
@@ -44,7 +48,12 @@ O banco desta etapa começa vazio e pertence à instalação que está rodando. 
 
 ## Executar no computador
 
-Com **Node.js 24 ou superior**, abra a pasta `ClimaFlow-Etapa03` no terminal e execute:
+Com **Node.js 24 ou superior**, baixe a branch desta entrega e execute:
+
+~~~bash
+git clone --branch feature/etapa03-entrega-final https://github.com/AgathaCeub/bootcamp2-climaflow.git
+cd bootcamp2-climaflow
+~~~
 
 ~~~bash
 npm ci
@@ -89,8 +98,10 @@ O workflow em `.github/workflows/ci.yml` está configurado para rodar em PRs par
 | Testes locais | 35 aprovados; [registro da execução](evidencias/testes-etapa03.txt) |
 | Persistência real | Criação, leitura após reabrir o banco e exclusão verificadas em SQLite |
 | Open-Meteo | Consulta real de Brasília retornou dados atuais e cinco dias de previsão |
-| Pull request, revisão e proteção da `main` | Pendentes da publicação e da revisão real |
-| Print da PR bloqueada pelo CI | Pendente da primeira execução no GitHub e da ativação do check obrigatório |
+| Pull request | [#1 aberta](https://github.com/AgathaCeub/bootcamp2-climaflow/pull/1), aguardando revisão de outra integrante |
+| GitHub Actions | [Testes e Container aprovados](https://github.com/AgathaCeub/bootcamp2-climaflow/actions/runs/45825875186); imagem construída e persistência validada ao recriar container |
+| Proteção da `main` | Formulário configurado com uma aprovação e checks Testes/Container; salvamento aguarda confirmação de acesso do GitHub |
+| Print da PR bloqueada pelo CI | Pendente da ativação do check obrigatório e de execução controlada com falha |
 | Imagem Docker Hub 3.1.0 | Pendente de publicação e verificação |
 | Conflito de merge | Nenhum ocorrido na preparação local desta versão |
 
