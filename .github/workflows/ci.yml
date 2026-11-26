@@ -1,0 +1,41 @@
+name: CI - Testes
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  testes:
+    name: Testes
+    runs-on: ubuntu-latest
+    steps:
+      - name: Baixar o código
+        uses: actions/checkout@v4
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - name: Preparar o projeto
+        run: npm ci --ignore-scripts
+      - name: Rodar os testes
+        run: npm test
+  container:
+    name: Container
+    needs: testes
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Construir a imagem
+        run: docker build -t climaflow:ci .
+      - name: Conferir aplicação e banco persistente em container
+        run: bash scripts/testar-container.sh climaflow:ci
